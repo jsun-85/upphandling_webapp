@@ -7,6 +7,7 @@
 
 {% block body %} class="index-page bg-gray-200" {% endblock body %}
 
+
 {% block content %}
 
 
@@ -66,7 +67,7 @@
 
 
 <section class="my-5 py-5">
-<button id="update-button">Update Rows 2</button>
+    <button id="update-button" type="button" class="button"><span class="button__text">Update Rows 2</span></button>
 
       <div class="card">
   <div class="table-responsive">
@@ -120,7 +121,7 @@
             </table>
         </div>
         </div>
-<div id="spinner" class="spinner-border text-primary" role="status">
+<div id="spinner-border" class="spinner-border text-primary" role="status">
   <span class="visually-hidden">Loading...</span>
 </div>
 
@@ -7159,13 +7160,34 @@
 {% endblock content %}
 
 {% block javascripts %}
+<script>
+    const theButton = document.querySelector(".button");
 
-    <script src=
-"https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js">
-    </script>
+theButton.addEventListener("click", () => {
+    theButton.classList.add("button--loading");
+});
+</script>
 
 
+    <!--
+<script>
 
+const spinner = document.getElementById('spinner1');
+const table = document.getElementById('table');
+
+$.ajax({
+    type: "GET",
+    url: '/'
+    success: function(res){
+        console.log('success')
+        console.log('{{ rows2 }}')
+    },
+    error:function(err){
+        console.log('error')
+    }
+})
+</script>
+-->
   <script>
     const updateButton = document.querySelector('#update-button');
     const rows2Table = document.querySelector('#rows2 tbody');
@@ -7185,6 +7207,7 @@
               <td><a href="${row.Länk}">${row.Länk}</a></td>
             `;
             rows2Table.appendChild(tr);
+            theButton.classList.remove("button--loading");
           });
         });
     }

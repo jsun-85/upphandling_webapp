@@ -92,6 +92,8 @@
             </table>
         </div>
         </div>
+
+
   <div class="card">
   <div class="table-responsive">
     <table id="rows2" class="table align-items-center mb-0">
@@ -7381,6 +7383,24 @@
 {% endblock content %}
 
 {% block javascripts %}
+
+<script>
+
+const spinner = document.getElementById('spinner1');
+const table = document.getElementById('table');
+
+$.ajax({
+    type: "GET",
+    url: '/'
+    success: function(res){
+        console.log('success')
+        console.log('{{ rows2 }}')
+    },
+    error:function(err){
+        console.log('error')
+    }
+})
+</script>
 
 <!--  Plugin for TypedJS, full documentation here: https://github.com/inorganik/CountUp.js -->
 <script src="{% static 'js/plugins/countup.min.js' %}"></script>
