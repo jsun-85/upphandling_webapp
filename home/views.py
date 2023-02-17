@@ -2,7 +2,28 @@ from django.shortcuts import render
 from django.http import HttpResponse
 from utilities import opic
 from utilities import pabliq
+from django.http import JsonResponse
 
+def rows2_data(request):
+    my_dataframe2 = pabliq.get_articles('vibration')
+    my_dataframe2.columns = ['Upphandling', 'Beställare', 'Publicerat', 'Svara senast', 'Länk']
+    rows2 = []
+
+    for index, row in my_dataframe2.iterrows():
+        Titel = row['Upphandling']
+        Beställare = row['Beställare']
+        Publicerat = row['Publicerat']
+        Svara_senast = row['Svara senast']
+        Länk = row['Länk']
+        rows2.append({
+            'Titel': Titel,
+            'Beställare': Beställare,
+            'Publicerat': Publicerat,
+            'Svara_senast': Svara_senast,
+            'Länk': Länk
+        })
+
+    return JsonResponse(rows2, safe=False)
 # Create your views here.
 
 # def index(request):
@@ -32,27 +53,8 @@ def index(request):
             'Länk': Länk
         })
 
-    my_dataframe2 = pabliq.get_articles('vibration')
-    my_dataframe2.columns = ['Upphandling', 'Beställare', 'Publicerat', 'Svara senast', 'Länk']
-    rows2 = []
 
-
-    for index, row in my_dataframe2.iterrows():
-        Titel = row['Upphandling']
-        Beställare = row['Beställare']
-        Publicerat = row['Publicerat']
-        Svara_senast = row['Svara senast']
-        Länk = row['Länk']
-        rows2.append({
-            'Titel': Titel,
-            'Beställare': Beställare,
-            'Publicerat': Publicerat,
-            'Svara_senast': Svara_senast,
-            'Länk': Länk
-        })
-
-    context = {'rows': rows,
-               'rows2': rows2}
+    context = {'rows': rows}
 
     return render(request, 'pages/index.html', context)
 

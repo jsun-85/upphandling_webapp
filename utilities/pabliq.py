@@ -21,7 +21,7 @@ def get_articles(search_term):
     # use pandas to read the HTML table into a DataFrame
     df = pd.read_html(table.get_attribute('outerHTML'))[0]
     soup = BeautifulSoup(driver.page_source, 'html.parser')
-    print(soup.prettify())
+    # print(soup.prettify())
     # close the browser
     driver.quit()
     # print(df)
@@ -31,5 +31,5 @@ def get_articles(search_term):
 
 if __name__ == '__main__':
     df = get_articles('vibration')
-    print(df)
-    print(df.columns)
+    # print(df)
+    # print(df.columns)
