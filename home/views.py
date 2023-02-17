@@ -32,6 +32,9 @@ def rows2_data(request):
 #     return render(request, 'pages/index.html')
 
 
+# Create your views here.
+
+
 def index(request):
     my_dataframe = opic.get_articles('vibration').T
     my_dataframe.columns = ['Titel', 'Beskrivning', 'Anbudstid', 'Länk']

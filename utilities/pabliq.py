@@ -4,6 +4,7 @@ from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
 from bs4 import BeautifulSoup
 import pandas as pd
+import datetime as dt
 
 
 def get_articles(search_term):
@@ -21,9 +22,12 @@ def get_articles(search_term):
     # use pandas to read the HTML table into a DataFrame
     df = pd.read_html(table.get_attribute('outerHTML'))[0]
     soup = BeautifulSoup(driver.page_source, 'html.parser')
-    # print(soup.prettify())
     # close the browser
     driver.quit()
+    df.columns = ['Upphandling', 'Beställare', 'Publicerat', 'Senast_svar', 'Länk']
+    # df['Publicerat'] = pd.to_datetime(df['Publicerat'])
+    # df['Publicerat'] = df['Publicerat'].dt.date
+    df = df[df['Publicerat'] > '2023-01-01']
     # print(df)
     # print(df.columns)
     return df
