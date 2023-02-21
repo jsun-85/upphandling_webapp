@@ -60,6 +60,11 @@ def get_articles(search_term):
         pass
     section = soup.find('section', {'role': 'complementary'})
 
+    publicerat = section.find_all('p', {'class': 'Type-paragraph'})
+    datum = [datum.text.strip() for datum in publicerat]
+    publ_datum = datum[0::2]
+    sista_ansokningsdag = datum[1::2]
+
     # Find all the links in the section that have the class "ListItem"
     links = section.select('a.ListItem')
 
@@ -84,22 +89,26 @@ def get_articles(search_term):
     descriptions = list(filter(('Sista anbudsdag').__ne__, descriptions))
     descriptions = list(filter(('Sista ansökningsdag').__ne__, descriptions))
     descriptions = list(filter(('').__ne__, descriptions))
+    #
+    # ps = section.select('p.Type-paragraph.Type-paragraph--marginBn')
+    #
+    # times = []
+    #
+    # for item in ps:
+    #     time = item.text.strip()
+    #     times.append(time)
 
-    ps = section.select('p.Type-paragraph.Type-paragraph--marginBn')
 
-    times = []
+    df_list = [results, descriptions, publ_datum, sista_ansokningsdag, article_links]
+    print(df_list)
+    df = pd.DataFrame(df_list)
+    df = df.T
+    df.columns = ['Upphandling', 'Beställare', 'Publicerat', 'Senast_svar', 'Länk']
 
-    for item in ps:
-        time = item.text.strip()
-        times.append(time)
-
-
-    df_list = [results, descriptions, times, article_links]
-
-    return pd.DataFrame(df_list)
+    return df
 
 if __name__ == '__main__':
-    df = get_articles("vibration").T
+    df = get_articles("vibration")
     print(df)
     # print(tabulate(df.T))
 

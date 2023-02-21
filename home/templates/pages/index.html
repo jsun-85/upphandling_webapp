@@ -65,27 +65,34 @@
   </div>
 </section>
 
+<form id="search-form" class="mb-3">
+    <div class="form-group">
+        <input type="text" class="form-control" id="search-term" placeholder="Search term">
+    </div>
+    <button class="btn btn-primary" id="search-button">Search</button>
+</form>
 
 <section class="my-5 py-5">
-    <button id="update-button" type="button" class="button"><span class="button__text">Update Rows 2</span></button>
 
       <div class="card">
   <div class="table-responsive">
     <table id="rows" class="table align-items-center mb-0">
   <thead>
     <tr>
-         <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Titel</th>
-        <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 ps-2">Beskrivning</th>
-        <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 ps-2">Anbudstid</th>
+         <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Upphandling</th>
+        <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 ps-2">Beställare</th>
+        <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 ps-2">Publicerat</th>
+        <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 ps-2">Senast svar</th>
         <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 ps-2">Länk</th>
     </tr>
   </thead>
   <tbody>
 {% for row in rows %}
         <tr>
-            <td>{{ row.Titel }}</td>
-            <td>{{ row.Beskrivning }}</td>
-            <td>{{ row.Anbudstid }}</td>
+            <td>{{ row.Upphandling }}</td>
+            <td>{{ row.Beställare }}</td>
+            <td>{{ row.Publicerat }}</td>
+            <td>{{ row.Senast_svar }}</td>
             <td>{{ row.Länk|safe }}</td>
         </tr>
         {% endfor %}
@@ -94,33 +101,7 @@
             </table>
         </div>
         </div>
-  <div class="card">
-  <div class="table-responsive">
-    <table id="rows2" class="table align-items-center mb-0">
-  <thead>
-    <tr>
-         <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Titel</th>
-        <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 ps-2">Beställare</th>
-        <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 ps-2">Publicerat</th>
-        <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 ps-2">Senast svar</th>
-        <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 ps-2">Länk</th>
-    </tr>
-  </thead>
-  <tbody id="rows2">
-                {% for row2 in rows2 %}
-                  <tr>
-                    <td>{{ row2.Titel }}</td>
-                    <td>{{ row2.Beställare }}</td>
-                    <td>{{ row2.Publicerat }}</td>
-                    <td>{{ row2.Senast_svar }}</td>
-                    <td>{{ row2.Länk|safe }}</td>
-                  </tr>
-                {% endfor %}
-  </tbody>
 
-            </table>
-        </div>
-        </div>
 <div id="spinner-border" class="spinner-border text-primary" role="status">
   <span class="visually-hidden">Loading...</span>
 </div>
@@ -7160,60 +7141,7 @@
 {% endblock content %}
 
 {% block javascripts %}
-<script>
-    const theButton = document.querySelector(".button");
 
-theButton.addEventListener("click", () => {
-    theButton.classList.add("button--loading");
-});
-</script>
-
-
-    <!--
-<script>
-
-const spinner = document.getElementById('spinner1');
-const table = document.getElementById('table');
-
-$.ajax({
-    type: "GET",
-    url: '/'
-    success: function(res){
-        console.log('success')
-        console.log('{{ rows2 }}')
-    },
-    error:function(err){
-        console.log('error')
-    }
-})
-</script>
--->
-  <script>
-    const updateButton = document.querySelector('#update-button');
-    const rows2Table = document.querySelector('#rows2 tbody');
-
-    function updateTable() {
-      fetch('/rows2-data/')
-        .then(response => response.json())
-        .then(data => {
-          rows2Table.innerHTML = '';
-          data.forEach(row => {
-            const tr = document.createElement('tr');
-            tr.innerHTML = `
-              <td>${row.Titel}</td>
-              <td>${row.Beställare}</td>
-              <td>${row.Publicerat}</td>
-              <td>${row.Senast_svar}</td>
-              <td><a href="${row.Länk}">${row.Länk}</a></td>
-            `;
-            rows2Table.appendChild(tr);
-            theButton.classList.remove("button--loading");
-          });
-        });
-    }
-
-    updateButton.addEventListener('click', updateTable);
-  </script>
 
 
 <!--  Plugin for TypedJS, full documentation here: https://github.com/inorganik/CountUp.js -->
