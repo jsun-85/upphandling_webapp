@@ -22,18 +22,12 @@ def convert_to_date(column):
     return pd.to_datetime(column, unit='D').dt.tz_localize(None).dt.strftime('%Y-%m-%d')
 
 
-def fetch_data(url='https://gateway.pabliq.se/api/opensearchapi/v1/search', columns=['Upphandling', 'Beställare', 'Publicerat',
-                                                                       'Svara_senast', 'Länk'], search_term='tekniska konsulter', **kwargs):
+def fetch_data(url='https://gateway.pabliq.se/api/opensearchapi/v1/search', search_term='tekniska konsulter', **kwargs):
 
     print(kwargs)
 
     search_json = {'langid':'sv',
                     'searchFields':{'freetxt':[search_term], 'nutsCodes':['SE']},}
-    # if kwargs:
-    #     fields = {k:v for k,v in kwargs.items()}
-    #     search_json = {'langid':'sv',
-    #                 'searchFields':fields,}
-    # print(search_json)
 
     try:
         r = requests.post(url, json=search_json)
@@ -51,13 +45,14 @@ def fetch_data(url='https://gateway.pabliq.se/api/opensearchapi/v1/search', colu
         print ("Something went wrong with the request:",err)
         return pd.DataFrame(), {"error": "Something went wrong with the request: " + str(err)}
 
-    # print(r.json())
+    return r.json()
 
+def process_data(json_data, columns=['Upphandling', 'Beställare', 'Publicerat', 'Svara_senast', 'Länk']):
     baselink = 'https://app.pabliq.se/procurements/'
 
-    df = pd.DataFrame(r.json()['result'])
+    df = pd.DataFrame(json_data['result'])
 
-    df2 = pd.json_normalize(r.json()['result'])
+    df2 = pd.json_normalize(json_data['result'])
     df2['link'] = baselink + df2['urlPath']
     df2.rename(columns={'title':'Upphandling', 'procurer.name': 'Beställare', 'published': 'Publicerat', 'deadline': 'Svara_senast', 'link': 'Länk'}, inplace=True)
     df2['Publicerat'] = convert_to_date(df2['Publicerat'])

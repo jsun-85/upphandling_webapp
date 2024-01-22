@@ -39,19 +39,16 @@ starting_search_term = 'vibration'
 # Create your views here.
 
 
-def index(request):
-    search_term = request.GET.get('search_term', default=starting_search_term)
+def fetch_and_process_data(search_term):
     my_dataframe = opic.get_articles(search_term)
     my_dataframe = pd.concat([my_dataframe, post_scrape.fetch_data(columns=['Upphandling', 'Beställare', 'Publicerat',
-                                                                       'Svara_senast', 'Länk'], freetxt =[starting_search_term], nutsCodes=['SE'])])
+                                                                       'Svara_senast', 'Länk'], freetxt =[search_term], nutsCodes=['SE'])])
 
     my_dataframe['Länk'] = my_dataframe['Länk'].apply(
         lambda x: '<a href="{0}">{0}</a>'.format(x))
     my_dataframe = my_dataframe.dropna(subset=['Upphandling'])
     my_dataframe_sorted = my_dataframe.sort_values(by=['Publicerat'], ascending=False)
     print(my_dataframe_sorted)
-    # # my_dataframe = MyModel.objects.all()  # or however you're getting your data
-    # context = {'my_dataframe': my_dataframe.to_html(escape=False, index=False)}
     rows = []
     for index, row in my_dataframe_sorted.iterrows():
         Upphandling = row['Upphandling']
@@ -66,9 +63,12 @@ def index(request):
             'Senast_svar': Senast_svar,
             'Länk': Länk
         })
+    return rows
 
+def index(request):
+    search_term = request.GET.get('search_term', default=starting_search_term)
+    rows = fetch_and_process_data(search_term)
     context = {'rows': rows}
-
     return render(request, 'pages/index.html', context)
 
 # def rows2_data(request):
