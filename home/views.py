@@ -57,7 +57,7 @@ def fetch_and_process_data(search_term):
         Upphandling = row['Upphandling']
         Beställare = row['Beställare']
         Publicerat = row['Publicerat']
-        Senast_svar = row['Svara_senast']
+        Senast_svar = row['<correct_column_name>']
         Länk = row['Länk']
         rows.append({
             'Upphandling': Upphandling,
