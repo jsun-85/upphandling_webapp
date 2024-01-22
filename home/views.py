@@ -53,7 +53,7 @@ def fetch_and_process_data(search_term):
     print(f'pabliq: {fetched_data.shape[0] if isinstance(fetched_data, pd.DataFrame) else 0} rows')
     if isinstance(fetched_data, pd.DataFrame):
         my_dataframe = pd.concat([my_dataframe, fetched_data])
-    else:
+        else:
         print(f"Error fetching data: {fetched_data}")
 
     my_dataframe['Länk'] = my_dataframe['Länk'].apply(
