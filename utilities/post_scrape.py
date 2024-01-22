@@ -34,7 +34,21 @@ def fetch_data(url='https://gateway.pabliq.se/api/opensearchapi/v1/search', colu
                     'searchFields':fields,}
     print(search_json)
 
-    r = requests.post(url, json=search_json)
+    try:
+        r = requests.post(url, json=search_json)
+        r.raise_for_status()
+    except requests.exceptions.HTTPError as errh:
+        print ("Http Error:",errh)
+        return pd.DataFrame() # return empty DataFrame on error
+    except requests.exceptions.ConnectionError as errc:
+        print ("Error Connecting:",errc)
+        return pd.DataFrame() # return empty DataFrame on error
+    except requests.exceptions.Timeout as errt:
+        print ("Timeout Error:",errt)
+        return pd.DataFrame() # return empty DataFrame on error
+    except requests.exceptions.RequestException as err:
+        print ("Something went wrong with the request:",err)
+        return pd.DataFrame() # return empty DataFrame on error
 
     # print(r.json())
 
