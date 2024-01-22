@@ -5,6 +5,7 @@ from utilities import opic
 from utilities import pabliq
 from django.http import JsonResponse
 from utilities import post_scrape
+from django.core.serializers import serialize
 import json
 
 # def rows2_data(request):
@@ -60,20 +61,21 @@ def fetch_and_process_data(search_term):
     my_dataframe = my_dataframe.dropna(subset=['Upphandling'])
     my_dataframe_sorted = my_dataframe.sort_values(by=['Publicerat'], ascending=False)
     print(my_dataframe_sorted)
-    rows = []
-    for index, row in my_dataframe_sorted.iterrows():
-        Upphandling = row['Upphandling']
-        Beställare = row['Beställare']
-        Publicerat = row['Publicerat']
-        Senast_svar = row['Senast_svar']
-        Länk = row['Länk']
-        rows.append({
-            'Upphandling': Upphandling,
-            'Beställare': Beställare,
-            'Publicerat': Publicerat,
-            'Senast_svar': Senast_svar,
-            'Länk': Länk
-        })
+    rows = my_dataframe_sorted.to_dict(orient='records')
+    # rows = []
+    # for index, row in my_dataframe_sorted.iterrows():
+    #     Upphandling = row['Upphandling']
+    #     Beställare = row['Beställare']
+    #     Publicerat = row['Publicerat']
+    #     Senast_svar = row['Senast_svar']
+    #     Länk = row['Länk']
+    #     rows.append({
+    #         'Upphandling': Upphandling,
+    #         'Beställare': Beställare,
+    #         'Publicerat': Publicerat,
+    #         'Senast_svar': Senast_svar,
+    #         'Länk': Länk
+    #     })
     return rows
 
 def index(request):
@@ -108,6 +110,11 @@ def search_data(request):
     print(search_term)
     if search_term:
         rows = fetch_and_process_data(search_term)
-        return JsonResponse(rows, safe=False)
+        rows = json.dumps(rows)
+        print(f'{rows=}')
+        print(f'JSON: {JsonResponse(rows, safe=False)}')
+        print(f'Json dumps: {json.dumps(rows)}')
+        return JsonResponse({'rows': rows}, safe=False)
+        # return JsonResponse(rows_json, safe=False)
     else:
         return JsonResponse({'error': 'No search term provided'}, status=400)
