@@ -96,11 +96,7 @@ def search_data(request):
     search_term = request.GET.get('search_term', '')
     print(search_term)
     if search_term:
-        data = post_scrape.fetch_data(search_term=search_term)
-        return data
-        if error:
-            return JsonResponse(error, status=500)
-        else:
-            return data
+        rows = fetch_and_process_data(search_term)
+        return JsonResponse(rows, safe=False)
     else:
         return JsonResponse({'error': 'No search term provided'}, status=400)
