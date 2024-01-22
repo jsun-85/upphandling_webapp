@@ -95,14 +95,13 @@ def index(request):
 def search_data(request):
     search_term = request.GET.get('search_term', '')
     if search_term:
-        try:
-            data = post_scrape.fetch_data(columns=['Upphandling', 'Beställare', 'Publicerat',
+        data = post_scrape.fetch_data(columns=['Upphandling', 'Beställare', 'Publicerat',
                                                                        'Svara_senast', 'Länk'],freetext=search_term, nutsCodes=['SE'])
-            if isinstance(data, pd.DataFrame):
-                return data
-            else:
-                return JsonResponse({'error': 'An error occurred while fetching data'}, status=500)
-        except Exception as e:
-            return JsonResponse({'error': str(e)}, status=500)
+        if isinstance(data, pd.DataFrame):
+            return data
+        elif isinstance(data, dict) and 'error' in data:
+            return JsonResponse(data, status=500)
+        else:
+            return JsonResponse({'error': 'An unknown error occurred'}, status=500)
     else:
         return None
