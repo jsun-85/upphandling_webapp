@@ -4,5 +4,5 @@ from . import views
 urlpatterns = [
     path('', views.index, name='index'),
     # path('rows2-data/', views.rows2_data, name='rows2-data'),
-    path('search-data/', views.search_data, name='search-data'),  # add this line
+    path('search_data/', views.search_data, name='search-data'),  # add this line
 ]
