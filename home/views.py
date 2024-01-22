@@ -43,7 +43,7 @@ def index(request):
     my_dataframe = opic.get_articles(search_term)
     my_dataframe = pd.concat([my_dataframe, post_scrape.fetch_data(columns=['Upphandling', 'Beställare', 'Publicerat',
                                                                        'Svara_senast', 'Länk'], freetxt =[starting_search_term], nutsCodes=['SE'])])
-                                                                       'Svara_senast', 'Länk'], freetxt =[search_term], nutsCodes=['SE'])])
+
     my_dataframe['Länk'] = my_dataframe['Länk'].apply(
         lambda x: '<a href="{0}">{0}</a>'.format(x))
     my_dataframe = my_dataframe.dropna(subset=['Upphandling'])
