@@ -33,18 +33,20 @@ from utilities import post_scrape
 #     # Page from the theme
 #     return render(request, 'pages/index.html')
 
+starting_search_term = 'vibration'
 
 # Create your views here.
 
 
 def index(request):
-    my_dataframe = opic.get_articles('vibration')
+    my_dataframe = opic.get_articles(starting_search_term)
     my_dataframe = pd.concat([my_dataframe, post_scrape.fetch_data(columns=['Upphandling', 'Beställare', 'Publicerat',
-                                                                       'Svara_senast', 'Länk'])])
+                                                                       'Svara_senast', 'Länk'], freetxt =[starting_search_term], nutsCodes=['SE'])])
     my_dataframe['Länk'] = my_dataframe['Länk'].apply(
         lambda x: '<a href="{0}">{0}</a>'.format(x))
     my_dataframe = my_dataframe.dropna(subset=['Upphandling'])
     my_dataframe_sorted = my_dataframe.sort_values(by=['Publicerat'], ascending=False)
+    print(my_dataframe_sorted)
     # # my_dataframe = MyModel.objects.all()  # or however you're getting your data
     # context = {'my_dataframe': my_dataframe.to_html(escape=False, index=False)}
     rows = []
@@ -52,7 +54,7 @@ def index(request):
         Upphandling = row['Upphandling']
         Beställare = row['Beställare']
         Publicerat = row['Publicerat']
-        Senast_svar = row['Senast_svar']
+        Senast_svar = row['Svara_senast']
         Länk = row['Länk']
         rows.append({
             'Upphandling': Upphandling,
@@ -89,6 +91,7 @@ def index(request):
 
 def search_data(request):
     search_term = request.GET.get('search_term')
-    data = pabliq.get_articles(search_term)
+    print(f'{search_term=}')
+    data = post_scrape.fetch_data(freetext = search_term, nutsCodes=['SE'])
     data_dict = data.to_dict('records')
     return JsonResponse({'rows': data_dict})

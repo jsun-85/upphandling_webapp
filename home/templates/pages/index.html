@@ -65,12 +65,13 @@
   </div>
 </section>
 
-<form id="search-form" class="mb-3">
+<form id="search-form" class="mb-3" onsubmit="performSearch(event)">
     <div class="form-group">
         <input type="text" class="form-control" id="search-term" placeholder="Search term">
     </div>
-    <button class="btn btn-primary" id="search-button">Search</button>
+    <button class="btn btn-primary" id="search-button" type="submit">Search</button>
 </form>
+
 
 <section class="my-5 py-5">
 
@@ -7155,6 +7156,26 @@
 <script src="{% static 'js/plugins/tilt.min.js' %}"></script>
 <!--  Plugin for Selectpicker - ChoicesJS, full documentation here: https://github.com/jshjohnson/Choices -->
 <script src="{% static 'js/plugins/choices.min.js' %}"></script>
+
+    <script>
+function performSearch(event) {
+    event.preventDefault();  // Prevents the form from submitting traditionally
+
+    var searchTerm = document.getElementById('search-term').value;
+
+    // AJAX request
+    fetch('/?search_term=' + searchTerm)
+        .then(response => response.json())
+        .then(data => {
+            // Handle the response data
+            console.log(data);
+            // Update your UI with the data
+        })
+        .catch(error => {
+            console.error('Error:', error);
+        });
+}
+</script>
 
 
 <script type="text/javascript">

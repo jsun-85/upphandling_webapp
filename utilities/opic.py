@@ -49,7 +49,12 @@ def get_articles(search_term):
     section = soup.find('section', {'class': 'Site-section'})
 
     # Find all the links in the section that have the class "ListItem"
-    links = section.find_all('a', {'class': 'ListItem'})
+    if section is not None:
+        links = section.find_all('a', {'class': 'ListItem'})
+    else:
+        return pd.DataFrame()
+    # Handle the case where the section is not found
+    # For example, log an error or return an empty list
 
     # Filter the links based on the href attribute that starts with "/upphandling/"
     upphandling_links = [link for link in links if link.get('href').startswith('/upphandling/')]
