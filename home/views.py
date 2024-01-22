@@ -94,9 +94,10 @@ def index(request):
 
 def search_data(request):
     search_term = request.GET.get('search_term', '')
+    print(search_term)
     if search_term:
-        data, error = post_scrape.fetch_data(columns=['Upphandling', 'Beställare', 'Publicerat',
-                                                                       'Svara_senast', 'Länk'],freetext=search_term, nutsCodes=['SE'])
+        data = post_scrape.fetch_data(search_term=search_term)
+        return data
         if error:
             return JsonResponse(error, status=500)
         else:
