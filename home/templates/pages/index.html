@@ -169,8 +169,9 @@ function performSearch(event) {
 
     fetch('/search_data?search_term=' + encodeURIComponent(searchTerm))
         .then(response => response.json())
-        .then(data => {
-            console.log('Data from server:', data);
+        .then(response => {
+            console.log('Data from server:', response);
+            var data = JSON.parse(response.rows);
             if (!Array.isArray(data)) {
                 console.error('Expected an array of data');
                 return; // Exit the function if data is not an array
