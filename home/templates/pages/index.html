@@ -170,11 +170,16 @@ function performSearch(event) {
     fetch('/search_data?search_term=' + encodeURIComponent(searchTerm))
         .then(response => {
             console.log('Data from server:', response);
-            var data = response.json().rows;
-            if (!Array.isArray(data)) {
+            var data = response.json();
+            if (data.error) {
+                console.error('Error from server:', data.error);
+                return; // Exit the function if there was an error
+            }
+            if (!Array.isArray(data.rows)) {
                 console.error('Expected an array of data');
                 return; // Exit the function if data is not an array
             }
+            data = data.rows;
 
             var tableBody = document.getElementById('rows').getElementsByTagName('tbody')[0];
             tableBody.innerHTML = ''; // Clear existing rows

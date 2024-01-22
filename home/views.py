@@ -110,11 +110,11 @@ def search_data(request):
     print(search_term)
     if search_term:
         try:
-            rows = fetch_and_process_data(search_term)
-            rows = rows
-            return JsonResponse({'rows': rows}, safe=False)
-        except json.JSONDecodeError:
-            return JsonResponse({'error': 'Error parsing JSON'}, status=400)
+            try:
+                rows = fetch_and_process_data(search_term)
+                return JsonResponse({'rows': rows}, safe=False)
+            except Exception as e:
+                return JsonResponse({'error': str(e)}, status=500)
         # return JsonResponse(rows_json, safe=False)
     else:
         return JsonResponse({'error': 'No search term provided'}, status=400)
