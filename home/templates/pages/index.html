@@ -158,24 +158,26 @@
 <script src="{% static 'js/plugins/tilt.min.js' %}"></script>
 <!--  Plugin for Selectpicker - ChoicesJS, full documentation here: https://github.com/jshjohnson/Choices -->
 <script src="{% static 'js/plugins/choices.min.js' %}"></script>
-
-    <script>
+    
+    
+<script>
 function performSearch(event) {
-    console.log("Performing search");
     console.log("Performing search");
     event.preventDefault();  // Prevents the form from submitting traditionally
 
     var searchTerm = document.getElementById('search-term').value;
 
-    // AJAX request
     fetch('/search_data?search_term=' + encodeURIComponent(searchTerm))
         .then(response => response.json())
         .then(data => {
-            // Handle the response data
-            console.log("Received data:", data);
-            console.log("Received data:", data);
+            if (!Array.isArray(data)) {
+                console.error('Expected an array of data');
+                return; // Exit the function if data is not an array
+            }
+
             var tableBody = document.getElementById('rows').getElementsByTagName('tbody')[0];
             tableBody.innerHTML = ''; // Clear existing rows
+
             data.forEach(function(row) {
                 var newRow = tableBody.insertRow();
                 newRow.innerHTML = '<td>' + row.Upphandling + '</td>' +
@@ -189,35 +191,12 @@ function performSearch(event) {
             console.error('Error:', error);
         });
 }
+
+document.getElementById('search-form').addEventListener('submit', performSearch);
 </script>
 
 
-<script type="text/javascript">
 
-  if (document.getElementById('state1')) {
-    const countUp = new CountUp('state1', document.getElementById("state1").getAttribute("countTo"));
-    if (!countUp.error) {
-      countUp.start();
-    } else {
-      console.error(countUp.error);
-    }
-  }
-  if (document.getElementById('state2')) {
-    const countUp1 = new CountUp('state2', document.getElementById("state2").getAttribute("countTo"));
-    if (!countUp1.error) {
-      countUp1.start();
-    } else {
-      console.error(countUp1.error);
-    }
-  }
-  if (document.getElementById('state3')) {
-    const countUp2 = new CountUp('state3', document.getElementById("state3").getAttribute("countTo"));
-    if (!countUp2.error) {
-      countUp2.start();
-    } else {
-      console.error(countUp2.error);
-    };
-  }
-</script>
+
 
 {% endblock javascripts %}
