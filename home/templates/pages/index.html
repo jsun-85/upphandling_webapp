@@ -166,12 +166,21 @@ function performSearch(event) {
     var searchTerm = document.getElementById('search-term').value;
 
     // AJAX request
-    fetch('/?search_term=' + searchTerm)
+    fetch('/search_data?search_term=' + encodeURIComponent(searchTerm))
         .then(response => response.json())
         .then(data => {
             // Handle the response data
             console.log(data);
-            // Update your UI with the data
+            var tableBody = document.getElementById('rows').getElementsByTagName('tbody')[0];
+            tableBody.innerHTML = ''; // Clear existing rows
+            data.rows.forEach(function(row) {
+                var newRow = tableBody.insertRow();
+                newRow.innerHTML = '<td>' + row.Upphandling + '</td>' +
+                                   '<td>' + row.Beställare + '</td>' +
+                                   '<td>' + row.Publicerat + '</td>' +
+                                   '<td>' + row.Senast_svar + '</td>' +
+                                   '<td>' + row.Länk + '</td>';
+            });
         })
         .catch(error => {
             console.error('Error:', error);
