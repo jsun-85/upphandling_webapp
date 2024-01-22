@@ -104,4 +104,4 @@ def search_data(request):
         else:
             return JsonResponse({'error': 'An unknown error occurred'}, status=500)
     else:
-        return None
+        return JsonResponse({'error': 'No search term provided'}, status=400)
