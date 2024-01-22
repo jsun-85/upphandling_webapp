@@ -102,5 +102,7 @@ def search_data(request):
             return JsonResponse({'rows': data_dict})
         except json.decoder.JSONDecodeError:
             return JsonResponse({'error': 'Invalid response from the external API'}, status=500)
+        except Exception as e:
+            return JsonResponse({'error': str(e)}, status=500)
     else:
         return JsonResponse({'error': 'No search term provided'}, status=400)
