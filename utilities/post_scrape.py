@@ -1,25 +1,42 @@
 import requests
 import pandas as pd
 import datetime as dt
+import dateutil as du
 
 url = 'https://gateway.pabliq.se/api/opensearchapi/v1/search'
 
+def du_parser(str):
+    return du.parser.parse(str).date()
+
+def ts_parser(str):
+    return pd.to_datetime(str, unit='D')
 def convert_to_date(column):
-    return pd.to_datetime(column).dt.tz_localize(None).dt.strftime('%Y-%m-%d')
+    # for value in column:
+    #     print(type(value))
+    # column2 = pd.to_datetime(column, format='ISO8601')
+    # for value in column2:
+    #     print(type(value))
+    # return column.apply(dt.datetime.fromtimestamp)
+    # return column.apply(ts_parser)
+    return pd.to_datetime(column, format='ISO8601').dt.tz_localize(None).dt.strftime('%Y-%m-%d')
+    return pd.to_datetime(column, unit='D').dt.tz_localize(None).dt.strftime('%Y-%m-%d')
 
 
 def fetch_data(url='https://gateway.pabliq.se/api/opensearchapi/v1/search', columns=None, **kwargs):
 
+    print(kwargs)
+
     search_json = {'langid':'sv',
-                    'searchFields':{'freetxt':['vibrationer'], 'nutsCodes':['SE']},}
+                    'searchFields':{'freetxt':['tekniska konsulter'], 'nutsCodes':['SE']},}
     if kwargs:
         fields = {k:v for k,v in kwargs.items()}
         search_json = {'langid':'sv',
                     'searchFields':fields,}
+    print(search_json)
 
     r = requests.post(url, json=search_json)
 
-    print(r.json())
+    # print(r.json())
 
     baselink = 'https://app.pabliq.se/procurements/'
 
@@ -32,8 +49,9 @@ def fetch_data(url='https://gateway.pabliq.se/api/opensearchapi/v1/search', colu
     df2['Svara_senast'] = convert_to_date(df2['Svara_senast'])
     if  columns:
         df2 = df2[columns]
-
+    print(df2)
     return df2
 
 if __name__ == '__main__':
+
     df = fetch_data(url, freetxt =['vibrationer'], nutsCodes=['SE'])
