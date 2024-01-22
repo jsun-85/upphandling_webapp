@@ -94,8 +94,11 @@ def index(request):
 def search_data(request):
     search_term = request.GET.get('search_term', '')
     if search_term:
-        data = post_scrape.fetch_data(freetext=search_term, nutsCodes=['SE'])
-        data_dict = data.to_dict('records')
-        return JsonResponse({'rows': data_dict})
+        try:
+            data = post_scrape.fetch_data(freetext=search_term, nutsCodes=['SE'])
+            data_dict = data.to_dict('records')
+            return JsonResponse({'rows': data_dict})
+        except json.decoder.JSONDecodeError:
+            return JsonResponse({'error': 'Invalid response from the external API'}, status=500)
     else:
         return JsonResponse({'error': 'No search term provided'}, status=400)
