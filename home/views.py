@@ -43,6 +43,7 @@ def fetch_and_process_data(search_term):
     my_dataframe = opic.get_articles(search_term)
     print(f'opic: {my_dataframe}')
     fetched_data = post_scrape.fetch_data(search_term)
+    fetched_data = post_scrape.process_data(fetched_data)
     print(f'pabliq: {fetched_data}')
     if isinstance(fetched_data, pd.DataFrame):
         my_dataframe = pd.concat([my_dataframe, fetched_data])
