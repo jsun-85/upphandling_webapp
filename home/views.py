@@ -5,6 +5,7 @@ from utilities import opic
 from utilities import pabliq
 from django.http import JsonResponse
 from utilities import post_scrape
+import json
 
 # def rows2_data(request):
 #     my_dataframe2 = pabliq.get_articles('vibration')
@@ -39,7 +40,7 @@ starting_search_term = 'vibration'
 
 
 def index(request):
-    search_term = request.GET.get('search_term', starting_search_term)
+    search_term = request.GET.get('search_term', default=starting_search_term)
     my_dataframe = opic.get_articles(search_term)
     my_dataframe = pd.concat([my_dataframe, post_scrape.fetch_data(columns=['Upphandling', 'Beställare', 'Publicerat',
                                                                        'Svara_senast', 'Länk'], freetxt =[starting_search_term], nutsCodes=['SE'])])
@@ -95,7 +96,8 @@ def search_data(request):
     search_term = request.GET.get('search_term', '')
     if search_term:
         try:
-            data = post_scrape.fetch_data(freetext=search_term, nutsCodes=['SE'])
+            data = post_scrape.fetch_data(columns=['Upphandling', 'Beställare', 'Publicerat',
+                                                                       'Svara_senast', 'Länk'],freetext=search_term, nutsCodes=['SE'])
             data_dict = data.to_dict('records')
             return JsonResponse({'rows': data_dict})
         except json.decoder.JSONDecodeError:
