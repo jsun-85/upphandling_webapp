@@ -99,5 +99,7 @@ def search_data(request):
             data = post_scrape.fetch_data(columns=['Upphandling', 'Beställare', 'Publicerat',
                                                                        'Svara_senast', 'Länk'],freetext=search_term, nutsCodes=['SE'])
             return data
+        except Exception as e:
+            return JsonResponse({'error': str(e)}, status=500)
     else:
         return None
