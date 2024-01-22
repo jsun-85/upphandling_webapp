@@ -109,9 +109,12 @@ def search_data(request):
     search_term = request.GET.get('search_term', '')
     print(search_term)
     if search_term:
-        rows = fetch_and_process_data(search_term)
-        rows = rows
-        return JsonResponse({'rows': rows}, safe=False)
+        try:
+            rows = fetch_and_process_data(search_term)
+            rows = rows
+            return JsonResponse({'rows': rows}, safe=False)
+        except json.JSONDecodeError:
+            return JsonResponse({'error': 'Error parsing JSON'}, status=400)
         # return JsonResponse(rows_json, safe=False)
     else:
         return JsonResponse({'error': 'No search term provided'}, status=400)
