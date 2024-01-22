@@ -41,6 +41,7 @@ starting_search_term = 'vibration'
 
 def fetch_and_process_data(search_term):
     print(f"Fetching and processing data for search term: {search_term}")
+    print(f"Fetching and processing data for search term: {search_term}")
     my_dataframe = opic.get_articles(search_term)
     print(f'opic: {my_dataframe.shape[0]} rows')
     fetched_data = post_scrape.fetch_data(url=post_scrape.url, search_term=search_term)
