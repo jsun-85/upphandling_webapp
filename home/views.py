@@ -41,7 +41,9 @@ starting_search_term = 'vibration'
 
 def fetch_and_process_data(search_term):
     my_dataframe = opic.get_articles(search_term)
+    print(f'opic: {my_dataframe}')
     fetched_data = post_scrape.fetch_data(columns=['Upphandling', 'Beställare', 'Publicerat', 'Svara_senast', 'Länk'], freetxt =[search_term], nutsCodes=['SE'])
+    print(f'pabliq: {fetched_data}')
     if isinstance(fetched_data, pd.DataFrame):
         my_dataframe = pd.concat([my_dataframe, fetched_data])
     else:
@@ -57,7 +59,7 @@ def fetch_and_process_data(search_term):
         Upphandling = row['Upphandling']
         Beställare = row['Beställare']
         Publicerat = row['Publicerat']
-        Senast_svar = row['<correct_column_name>']
+        Senast_svar = row['Senast_svar']
         Länk = row['Länk']
         rows.append({
             'Upphandling': Upphandling,
