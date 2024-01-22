@@ -168,9 +168,9 @@ function performSearch(event) {
     var searchTerm = document.getElementById('search-term').value;
 
     fetch('/search_data?search_term=' + encodeURIComponent(searchTerm))
-        .then(response => {
-            console.log('Data from server:', response);
-            var data = response.json();
+        .then(response => response.json())  // Parse the JSON from the response
+        .then(data => {
+            console.log('Data from server:', data);
             if (data.error) {
                 console.error('Error from server:', data.error);
                 return; // Exit the function if there was an error
@@ -179,18 +179,17 @@ function performSearch(event) {
                 console.error('Expected an array of data');
                 return; // Exit the function if data is not an array
             }
-            data = data.rows;
 
             var tableBody = document.getElementById('rows').getElementsByTagName('tbody')[0];
             tableBody.innerHTML = ''; // Clear existing rows
 
-            data.forEach(function(row) {
+            data.rows.forEach(function(row) {
                 var newRow = tableBody.insertRow();
                 newRow.innerHTML = '<td>' + row.Upphandling + '</td>' +
                                    '<td>' + row.Beställare + '</td>' +
                                    '<td>' + row.Publicerat + '</td>' +
-                                   '<td>' + row.Senast_svar + '</td>' +
-                                   '<td>' + row.Länk + '</td>';
+                                   '<td>' + (row.Senast_svar || '') + '</td>' +
+                                   '<td>' + (row.Länk || '').toString().replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;') + '</td>';
             });
         })
         .catch(error => {
@@ -199,6 +198,7 @@ function performSearch(event) {
 }
 
 document.getElementById('search-form').addEventListener('submit', performSearch);
+
 </script>
 
 

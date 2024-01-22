@@ -59,6 +59,7 @@ def fetch_and_process_data(search_term):
     my_dataframe['Länk'] = my_dataframe['Länk'].apply(
         lambda x: '<a href="{0}">{0}</a>'.format(x))
     my_dataframe = my_dataframe.dropna(subset=['Upphandling'])
+    my_dataframe = my_dataframe.where(pd.notnull(my_dataframe), None)
     my_dataframe_sorted = my_dataframe.sort_values(by=['Publicerat'], ascending=False)
     print(my_dataframe_sorted)
     rows = my_dataframe_sorted.to_dict(orient='records')
@@ -76,6 +77,7 @@ def fetch_and_process_data(search_term):
     #         'Senast_svar': Senast_svar,
     #         'Länk': Länk
     #     })
+
     return rows
 
 def index(request):
@@ -110,11 +112,10 @@ def search_data(request):
     print(search_term)
     if search_term:
         try:
-            try:
-                rows = fetch_and_process_data(search_term)
-                return JsonResponse({'rows': rows}, safe=False)
-            except Exception as e:
-                return JsonResponse({'error': str(e)}, status=500)
-        # return JsonResponse(rows_json, safe=False)
-        else:
+            rows = fetch_and_process_data(search_term)
+            print("Data being sent to frontend:", rows)
+            return JsonResponse({'rows': rows}, safe=False)
+        except Exception as e:
+            return JsonResponse({'error': str(e)}, status=500)
+    else:
         return JsonResponse({'error': 'No search term provided'}, status=400)
