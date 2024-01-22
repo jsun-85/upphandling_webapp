@@ -34,16 +34,16 @@ def fetch_data(url='https://gateway.pabliq.se/api/opensearchapi/v1/search', sear
         r.raise_for_status()
     except requests.exceptions.HTTPError as errh:
         print ("Http Error:",errh)
-        return pd.DataFrame(), {"error": "Http Error: " + str(errh)}
+        return pd.DataFrame()
     except requests.exceptions.ConnectionError as errc:
         print ("Error Connecting:",errc)
-        return pd.DataFrame(), {"error": "Error Connecting: " + str(errc)}
+        return pd.DataFrame()
     except requests.exceptions.Timeout as errt:
         print ("Timeout Error:",errt)
-        return pd.DataFrame(), {"error": "Timeout Error: " + str(errt)}
+        return pd.DataFrame()
     except requests.exceptions.RequestException as err:
         print ("Something went wrong with the request:",err)
-        return pd.DataFrame(), {"error": "Something went wrong with the request: " + str(err)}
+        return pd.DataFrame()
 
     return r.json()
 
