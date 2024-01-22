@@ -168,10 +168,9 @@ function performSearch(event) {
     var searchTerm = document.getElementById('search-term').value;
 
     fetch('/search_data?search_term=' + encodeURIComponent(searchTerm))
-        .then(response => response.json())
         .then(response => {
             console.log('Data from server:', response);
-            var data = response.rows;
+            var data = response.json().rows;
             if (!Array.isArray(data)) {
                 console.error('Expected an array of data');
                 return; // Exit the function if data is not an array
