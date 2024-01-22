@@ -161,6 +161,7 @@
 
     <script>
 function performSearch(event) {
+    console.log("Performing search");
     event.preventDefault();  // Prevents the form from submitting traditionally
 
     var searchTerm = document.getElementById('search-term').value;
@@ -170,7 +171,7 @@ function performSearch(event) {
         .then(response => response.json())
         .then(data => {
             // Handle the response data
-            console.log(data);
+            console.log("Received data:", data);
             var tableBody = document.getElementById('rows').getElementsByTagName('tbody')[0];
             tableBody.innerHTML = ''; // Clear existing rows
             data.forEach(function(row) {
