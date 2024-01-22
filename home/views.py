@@ -44,10 +44,10 @@ def fetch_and_process_data(search_term):
     print(f'opic: {my_dataframe}')
     fetched_data = post_scrape.fetch_data(columns=['Upphandling', 'Beställare', 'Publicerat', 'Svara_senast', 'Länk'], freetxt =[search_term], nutsCodes=['SE'])
     print(f'pabliq: {fetched_data}')
-    if isinstance(fetched_data, pd.DataFrame):
-        my_dataframe = pd.concat([my_dataframe, fetched_data])
-    else:
+    if isinstance(fetched_data, dict):
         print(f"Error fetching data: {fetched_data}")
+    else:
+        my_dataframe = pd.concat([my_dataframe, fetched_data])
 
     my_dataframe['Länk'] = my_dataframe['Länk'].apply(
         lambda x: '<a href="{0}">{0}</a>'.format(x))
