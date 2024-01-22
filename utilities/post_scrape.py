@@ -50,7 +50,11 @@ def fetch_data(url='https://gateway.pabliq.se/api/opensearchapi/v1/search', sear
 def process_data(json_data, columns=['Upphandling', 'Beställare', 'Publicerat', 'Svara_senast', 'Länk']):
     baselink = 'https://app.pabliq.se/procurements/'
 
-    df = pd.DataFrame(json_data['result'])
+    if 'result' in json_data:
+        df = pd.DataFrame(json_data['result'])
+    else:
+        print("Error: 'result' not found in json_data")
+        return pd.DataFrame()
 
     df2 = pd.json_normalize(json_data['result'])
     df2['link'] = baselink + df2['urlPath']
