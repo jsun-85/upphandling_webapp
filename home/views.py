@@ -98,11 +98,6 @@ def search_data(request):
         try:
             data = post_scrape.fetch_data(columns=['Upphandling', 'Beställare', 'Publicerat',
                                                                        'Svara_senast', 'Länk'],freetext=search_term, nutsCodes=['SE'])
-            data_dict = data.to_dict('records')
-            return JsonResponse({'rows': data_dict})
-        except json.decoder.JSONDecodeError:
-            return JsonResponse({'error': 'Invalid response from the external API'}, status=500)
-        except Exception as e:
-            return JsonResponse({'error': str(e)}, status=500)
+            return data
     else:
-        return JsonResponse({'error': 'No search term provided'}, status=400)
+        return None
