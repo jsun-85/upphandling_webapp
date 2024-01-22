@@ -110,10 +110,7 @@ def search_data(request):
     print(search_term)
     if search_term:
         rows = fetch_and_process_data(search_term)
-        rows = json.dumps(rows)
-        print(f'{rows=}')
-        print(f'JSON: {JsonResponse(rows, safe=False)}')
-        print(f'Json dumps: {json.dumps(rows)}')
+        rows = json.loads(rows)
         return JsonResponse({'rows': rows}, safe=False)
         # return JsonResponse(rows_json, safe=False)
     else:
