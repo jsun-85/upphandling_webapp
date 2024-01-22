@@ -173,7 +173,7 @@ function performSearch(event) {
             console.log(data);
             var tableBody = document.getElementById('rows').getElementsByTagName('tbody')[0];
             tableBody.innerHTML = ''; // Clear existing rows
-            data.rows.forEach(function(row) {
+            data.forEach(function(row) {
                 var newRow = tableBody.insertRow();
                 newRow.innerHTML = '<td>' + row.Upphandling + '</td>' +
                                    '<td>' + row.Beställare + '</td>' +
